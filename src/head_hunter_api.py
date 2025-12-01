@@ -24,15 +24,40 @@ class HeadHunterAPI(VacanciesAPI):
         return self.vacancies
 
     @staticmethod
-    def _simplify_vacancy(vacancy):
+    def _normalize_salary(value):
+        """ Приводит зарплату к рабочему формату """
+        if value is None:
+            return None
+        if isinstance(value, (list, tuple)) and value:
+            value = value[0]
+        if value == 0:
+            return None
+        try:
+            return int(value)
+        except:
+            return None
+
+
+    @classmethod
+    def _simplify_vacancy(cls, vacancy):
         salary = vacancy.get("salary", {})
+        if salary:
+            salary_from = cls._normalize_salary(salary.get("from"))
+            salary_to = cls._normalize_salary(salary.get("to"))
+            currency = salary.get("currency")
+        else:
+            salary_from = None
+            salary_to = None
+            currency = None
+
 
         return {
             "id": vacancy.get("id"),
             "name": vacancy.get("name"),
             "url": vacancy.get("url"),
-            "salary_from": salary.get("from"),
-            "salary_to": salary.get("to"),
+            "salary_from": salary_from,
+            "salary_to": salary_to,
+            "salary_currency": currency,
             "requirement": vacancy.get("snippet", {}).get("requirement")
         }
 
@@ -40,4 +65,4 @@ class HeadHunterAPI(VacanciesAPI):
 if __name__ == "__main__":
 
     vacancies = HeadHunterAPI()
-    print(vacancies.get_vacancies("Python, Москва"))
+    print(vacancies.get_vacancies("Python разработчик, Москва"))
