@@ -38,4 +38,14 @@ class JSON_saver(Saver):
 
         return data
 
-    def delete_vacancy(self, *args, **kwargs):
+    def delete_vacancy(self, vacancy_id):
+        """ Удаляет вакансию по id """
+        data = self._read_file()
+
+        updated_data = [vacancy for vacancy in data if vacancy.get("id") != vacancy_id]
+        if len(updated_data) == len(data):
+            print(f"Вакансия с id {vacancy_id} не найдена")
+            return False
+
+        self._write_file(updated_data)
+        return True

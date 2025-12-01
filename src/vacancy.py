@@ -4,7 +4,10 @@ from mypy.config_parser import str_or_array_as_list
 class Vacancy():
     """ Класс для вакансий """
 
-    def __init__(self, name, url, salary_from=None, salary_to=None, requirement=""):
+    def __init__(self, id, name, url, salary_from=None, salary_to=None, requirement=""):
+
+        self.id = id
+
         if not name or not isinstance(name, str):
             self.name = "Без названия"
         else:
@@ -35,16 +38,28 @@ class Vacancy():
 
     def __lt__(self, other):
         """ Метод для операции сравнения «меньше» """
-        return self.salary < other.salay
+        if isinstance(other, Vacancy):
+            return self.salary < other.salary
+        else:
+            raise TypeError
 
     def __le__(self, other):
         """ Метод для операции сравнения «меньше или равно» """
-        return self.salary <= other.salary
+        if isinstance(other, Vacancy):
+            return self.salary <= other.salary
+        else:
+            raise TypeError
 
     def __gt__(self, other):
         """ метод для операции сравнения «больше» """
-        return self.salary > other.salay
+        if isinstance(other, Vacancy):
+            return self.salary > other.salary
+        else:
+            raise TypeError
 
     def __ge__(self, other):
         """ Метод для операции сравнения «больше или равно» """
-        return self.salary >= other.salary
+        if isinstance(other, Vacancy):
+            return self.salary >= other.salary
+        else:
+            raise TypeError
