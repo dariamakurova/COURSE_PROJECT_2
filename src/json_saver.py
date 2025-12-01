@@ -3,7 +3,7 @@ import os.path
 
 from src.saver import Saver
 
-class JSON_saver(Saver):
+class JSONSaver(Saver):
     """ Класс для работы с JSON файлами вакансий"""
 
     def __init__(self, filename="vacancies.json"):

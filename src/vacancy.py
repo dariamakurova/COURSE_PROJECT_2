@@ -63,3 +63,17 @@ class Vacancy():
             return self.salary >= other.salary
         else:
             raise TypeError
+
+
+    @classmethod
+    def cast_to_object_list(cls, vacancies_json):
+        vacancies = []
+        for vacancy in vacancies_json:
+            obj = cls(id=vacancy.get("id"),
+                      name=vacancy.get("name"),
+                      url=vacancy.get("url"),
+                      salary_from=vacancy.get("salary_from"),
+                      salary_to=vacancy.get("salary_to"),
+                      requirement=vacancy.get("requirement"))
+            vacancies.append(obj)
+        return vacancies

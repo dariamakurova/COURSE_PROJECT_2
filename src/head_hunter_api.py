@@ -15,10 +15,26 @@ class HeadHunterAPI(VacanciesAPI):
         self.params['text'] = keyword
         while self.params.get('page') != 20:
             response = requests.get(self.url, headers=self.headers, params=self.params)
-            vacancies = response.json()['items']
-            self.vacancies.extend(vacancies)
+            vacancies_json = response.json()['items']
+
+            for vacancy in vacancies_json:
+                self.vacancies.append(self._simplify_vacancy(vacancy))
+
             self.params['page'] += 1
-        return json.dumps(self.vacancies, ensure_ascii=False, indent=4)
+        return self.vacancies
+
+    @staticmethod
+    def _simplify_vacancy(vacancy):
+        salary = vacancy.get("salary", {})
+
+        return {
+            "id": vacancy.get("id"),
+            "name": vacancy.get("name"),
+            "url": vacancy.get("url"),
+            "salary_from": salary.get("from"),
+            "salary_to": salary.get("to"),
+            "requirement": vacancy.get("snippet", {}).get("requirement")
+        }
 
 
 if __name__ == "__main__":
