@@ -6,22 +6,26 @@ class HeadHunterAPI(VacanciesAPI):
     """ Класс для получения вакансий с платформы HeadHunter"""
 
     def __init__(self):
-        self.url = 'https://api.hh.ru/vacancies'
-        self.headers = {'User-Agent': 'HH-User-Agent'}
-        self.params = {'text': '', 'page': 0, 'per_page': 100}
-        self.vacancies = []
+        self.__url = 'https://api.hh.ru/vacancies'
+        self.__headers = {'User-Agent': 'HH-User-Agent'}
+        self.__params = {'text': '', 'page': 0, 'per_page': 100}
+        self.__vacancies = []
+
+
+
+    def _connect(self, keyword: str):
+        self.__params['text'] = keyword
+        response = requests.get(self.__url, headers=self.__headers, params=self.__params)
+        response.raise_for_status()
+        return response.json()
 
     def get_vacancies(self, keyword):
-        self.params['text'] = keyword
-        while self.params.get('page') != 20:
-            response = requests.get(self.url, headers=self.headers, params=self.params)
-            vacancies_json = response.json()['items']
-
+        while self.__params.get('page') != 20:
+            vacancies_json = self._connect(keyword)["items"]
             for vacancy in vacancies_json:
-                self.vacancies.append(self._simplify_vacancy(vacancy))
-
-            self.params['page'] += 1
-        return self.vacancies
+                self.__vacancies.append(self._simplify_vacancy(vacancy))
+            self.__params['page'] += 1
+        return self.__vacancies
 
     @staticmethod
     def _normalize_salary(value):
