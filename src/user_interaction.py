@@ -30,7 +30,7 @@ def user_interaction():
 
 
     if user_choice == "1":
-        print_vacancies(vacs_list)
+        print_vacancies(sort_vacancies(vacs_list))
 
     elif user_choice == "2":
         top_n = int(input("Введите количество вакансий для вывода в топ N: "))
