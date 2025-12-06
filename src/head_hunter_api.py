@@ -8,10 +8,8 @@ class HeadHunterAPI(VacanciesAPI):
     def __init__(self):
         self.__url = 'https://api.hh.ru/vacancies'
         self.__headers = {'User-Agent': 'HH-User-Agent'}
-        self.__params = {'text': '', 'page': 0, 'per_page': 100}
+        self.__params = {'text': '', 'page': 0, 'per_page': 100, 'only_with_salary' : True}
         self.__vacancies = []
-
-
 
 
     def __connect(self, keyword: str):
@@ -26,12 +24,10 @@ class HeadHunterAPI(VacanciesAPI):
         while self.__params.get('page') != 20:
             vacancies_json = self.__connect(keyword)["items"]
             for vacancy in vacancies_json:
-                self.__vacancies.append(self._simplify_vacancy(vacancy))
+                if vacancy.get("salary") and vacancy.get("salary").get("currency") == "RUR":
+                    self.__vacancies.append(self.simplify_vacancy(vacancy))
             self.__params['page'] += 1
         return self.__vacancies
-
-
-
 
 
     @classmethod
@@ -39,11 +35,12 @@ class HeadHunterAPI(VacanciesAPI):
         """ Оставляет только рабочие параметры вакансии """
 
         return {
-            "id": vacancy.get("id"),
+            "vac_id": vacancy.get("id"),
             "name": vacancy.get("name"),
             "employer": vacancy.get("employer", {}).get("name"),
             "url": vacancy.get("alternate_url"),
-            "salary": vacancy.get("salary")
+            "salary": vacancy.get("salary"),
+            "requirement": vacancy.get("snippet", {}).get("requirement")
         }
 
 
