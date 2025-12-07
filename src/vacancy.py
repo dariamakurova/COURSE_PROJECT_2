@@ -3,10 +3,10 @@ from mypy.config_parser import str_or_array_as_list
 
 class Vacancy():
     """ Класс для вакансий """
-    __slots__ = ["id", "name", "employer", "url", "salary_from", "salary_to", "salary_max", "salary_currency", "requirement"]
+    __slots__ = ["vac_id", "name", "employer", "url", "salary_from", "salary_to", "salary_max", "salary_currency", "requirement"]
 
     def __init__(self, vac_id, name, employer, url, salary, requirement):
-        self.id = vac_id
+        self.vac_id = vac_id
         self.name = name
         self.employer = employer
         self.__validate_salary(salary)
@@ -19,10 +19,33 @@ class Vacancy():
     def __validate_salary(self, salary: dict):
         """ Приводит зарплату к рабочему формату """
 
+        rur_currencies = {"RUR" : "RUR",
+                          "RUB": "RUR",
+                          "РУБ": "RUR",
+                          "РУБ.": "RUR"}
+
         if salary:
-            self.salary_from = salary["from"] if salary["from"] else 0
-            self.salary_to = salary["to"] if salary["to"] else 0
-            self.salary_currency = salary["currency"] if salary["currency"] else None
+            if isinstance(salary, dict):
+                self.salary_from = salary["from"] if salary.get("from") else 0
+                self.salary_to = salary["to"] if salary.get("to") else 0
+                self.salary_currency = salary["currency"] if salary.get("currency") else None
+
+            elif isinstance(salary, str):
+
+                self.salary_from = 0
+                self.salary_to = 0
+                self.salary_currency = None
+
+                salary_details = salary.split("-")
+                if len(salary_details) >= 1 and salary_details[0].strip().isdigit():
+                    self.salary_from = int(salary_details[0])
+
+                if len(salary_details) >= 2 and salary_details[1].split()[0].strip().isdigit():
+                    self.salary_to = int(salary_details[1].split()[0].strip())
+
+                    if len(salary_details[1].split()) >= 2:
+                        currency = salary_details[1].split()[1].strip().upper()
+                        self.salary_currency = rur_currencies.get(currency, currency)
         else:
             self.salary_from = 0
             self.salary_to = 0

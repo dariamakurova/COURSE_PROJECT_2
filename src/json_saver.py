@@ -25,14 +25,26 @@ class JSONSaver(Saver):
             json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-    def add_vacancy(self, vacancies: list[dict]):
-        """ Добавление экземпляров Vacancy в JSON файл с вакансиями """
+    def add_vacancy(self, vacancy: dict | Vacancy):
+        """ Запись вакансий в JSON файл с вакансиями """
+
         data = self._read_file()
         id_list = [vac["vac_id"] for vac in data]
 
-        for vacancy in vacancies:
-            if vacancy["vac_id"] not in id_list:
-                data.append(vacancy)
+        if isinstance(vacancy, dict):
+                if vacancy.get("vac_id") not in id_list:
+                    data.append(vacancy)
+
+        elif isinstance(vacancy, Vacancy):
+            vacancy_json = {"vac_id": vacancy.vac_id,
+                            "name": vacancy.name,
+                            "employer": vacancy.employer,
+                            "url": vacancy.url,
+                            "salary": {"from": vacancy.salary_from, "to": vacancy.salary_to,
+                                       "currency": vacancy.salary_currency},
+                            "requirement": vacancy.requirement}
+            if vacancy_json["vac_id"] not in id_list:
+                data.append(vacancy_json)
 
         self._write_file(data)
 
@@ -45,14 +57,15 @@ class JSONSaver(Saver):
             vacancies.append(Vacancy(**vacancy))
         return vacancies
 
-    def delete_vacancy(self, vacancy_id=all):
-        """ Удаляет вакансию по id или полностью очищает файл, если id не указан"""
+    def delete_vacancy(self, vacancy: Vacancy=None):
+        """ Удаляет вакансию по id или полностью очищает файл, если аргумент не передан """
         data = self._read_file()
 
-        if vacancy_id == "all":
+        if not vacancy:
             self._write_file([])
             return True
         else:
+            vacancy_id = vacancy.vac_id
             updated_data = [vacancy for vacancy in data if vacancy.get("vac_id") != vacancy_id]
             if len(updated_data) == len(data):
                 print(f"Вакансия с id {vacancy_id} не найдена")

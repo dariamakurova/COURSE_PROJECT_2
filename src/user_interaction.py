@@ -9,10 +9,14 @@ def user_interaction():
 
     search_query = input("Введите поисковый запрос: ")
     vacancies = HeadHunterAPI()
-    vacancies_lict = vacancies.get_vacancies(search_query)
+    print("Подождите, загружаем подходящие вакансии...")
+    vacancies_list = vacancies.get_vacancies(search_query)
 
     js = JSONSaver()
-    js.add_vacancy(vacancies_lict)
+
+    for vacancy in vacancies_list:
+        js.add_vacancy(vacancy)
+
     vacs_list = js.get_vacancies()
 
     while True:
@@ -43,7 +47,7 @@ def user_interaction():
 
         while True:
             salary_choice = input("Хотите отфильтровать полученные вакансии по зарплате в определенном диапозоне?\n "
-                                  "Введите да/нет")
+                                  "Введите да/нет ")
 
             available_options = ["да", "нет"]
             if salary_choice.lower() in available_options:

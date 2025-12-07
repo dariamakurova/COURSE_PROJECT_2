@@ -42,9 +42,3 @@ class HeadHunterAPI(VacanciesAPI):
             "salary": vacancy.get("salary"),
             "requirement": vacancy.get("snippet", {}).get("requirement")
         }
-
-
-if __name__ == "__main__":
-
-    vacancies = HeadHunterAPI()
-    print(vacancies.get_vacancies("ТПО ПРАЙД, Москва"))
