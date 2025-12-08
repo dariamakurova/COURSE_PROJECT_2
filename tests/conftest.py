@@ -1,5 +1,7 @@
 import pytest
 
+from src.vacancy import Vacancy
+
 
 @pytest.fixture
 def vacancy_data_hh():
@@ -40,3 +42,23 @@ def vacancy_data_json():
                         "snippet": {"requirement": "Тестовые требования",
                                     "responsibility": "Тестовые обязанности"}}
                        ]}
+
+@pytest.fixture()
+def vacancy_dict():
+    return {"vac_id":"93353083",
+            "name":"Тестировщик",
+            "salary":{"from":350000,"to":450000,"currency":"RUR"},
+            "url":"http://example.com",
+            "employer": "Company",
+            "requirement":"Тестовые требования"}
+
+@pytest.fixture()
+def vacancy_obj():
+    data = {"vac_id":"123456",
+            "name":"Тестировщик Vac",
+            "salary":{"from":350000,"to":450000,"currency":"RUR"},
+            "url":"http://example.com",
+            "employer": "Company Vac",
+            "requirement":"Тестовые требования Vac"}
+    return Vacancy("123456", "Тестировщик Vac", "Company Vac", "http://example.com",
+                   {"from":350000,"to":450000,"currency":"RUR"}, "Тестовые требования Vac")
