@@ -28,7 +28,8 @@ class Vacancy():
             if isinstance(salary, dict):
                 self.salary_from = salary["from"] if salary.get("from") else 0
                 self.salary_to = salary["to"] if salary.get("to") else 0
-                self.salary_currency = salary["currency"] if salary.get("currency") else None
+                self.salary_currency = rur_currencies.get(salary["currency"].upper(), salary["currency"]) if salary.get("currency") \
+                    else None
 
             elif isinstance(salary, str):
 
