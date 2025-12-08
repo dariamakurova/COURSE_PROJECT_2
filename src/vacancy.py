@@ -1,9 +1,20 @@
 from mypy.config_parser import str_or_array_as_list
 
 
-class Vacancy():
-    """ Класс для вакансий """
-    __slots__ = ["vac_id", "name", "employer", "url", "salary_from", "salary_to", "salary_max", "salary_currency", "requirement"]
+class Vacancy:
+    """Класс для вакансий"""
+
+    __slots__ = [
+        "vac_id",
+        "name",
+        "employer",
+        "url",
+        "salary_from",
+        "salary_to",
+        "salary_max",
+        "salary_currency",
+        "requirement",
+    ]
 
     def __init__(self, vac_id, name, employer, url, salary, requirement):
         self.vac_id = vac_id
@@ -15,21 +26,20 @@ class Vacancy():
 
         self.salary_max = max(self.salary_from, self.salary_to)
 
-
     def __validate_salary(self, salary: dict):
-        """ Приводит зарплату к рабочему формату """
+        """Приводит зарплату к рабочему формату"""
 
-        rur_currencies = {"RUR" : "RUR",
-                          "RUB": "RUR",
-                          "РУБ": "RUR",
-                          "РУБ.": "RUR"}
+        rur_currencies = {"RUR": "RUR", "RUB": "RUR", "РУБ": "RUR", "РУБ.": "RUR"}
 
         if salary:
             if isinstance(salary, dict):
                 self.salary_from = salary["from"] if salary.get("from") else 0
                 self.salary_to = salary["to"] if salary.get("to") else 0
-                self.salary_currency = rur_currencies.get(salary["currency"].upper(), salary["currency"]) if salary.get("currency") \
+                self.salary_currency = (
+                    rur_currencies.get(salary["currency"].upper(), salary["currency"])
+                    if salary.get("currency")
                     else None
+                )
 
             elif isinstance(salary, str):
 
@@ -52,9 +62,8 @@ class Vacancy():
             self.salary_to = 0
             self.salary_currency = None
 
-
     def __lt__(self, other):
-        """ Метод для операции сравнения «меньше» """
+        """Метод для операции сравнения «меньше»"""
         if isinstance(other, Vacancy):
             if self.salary_currency == other.salary_currency:
                 return self.salary_max < other.salary_max
@@ -64,7 +73,7 @@ class Vacancy():
             raise TypeError
 
     def __le__(self, other):
-        """ Метод для операции сравнения «меньше или равно» """
+        """Метод для операции сравнения «меньше или равно»"""
         if isinstance(other, Vacancy):
             if self.salary_currency == other.salary_currency:
                 return self.salary_max <= other.salary_max
@@ -74,7 +83,7 @@ class Vacancy():
             raise TypeError
 
     def __gt__(self, other):
-        """ Метод для операции сравнения «больше» """
+        """Метод для операции сравнения «больше»"""
         if isinstance(other, Vacancy):
             if self.salary_currency == other.salary_currency:
                 return self.salary_max > other.salary_max
@@ -84,7 +93,7 @@ class Vacancy():
             raise TypeError
 
     def __ge__(self, other):
-        """ Метод для операции сравнения «больше или равно» """
+        """Метод для операции сравнения «больше или равно»"""
         if isinstance(other, Vacancy):
             if self.salary_currency == other.salary_currency:
                 return self.salary_max >= other.salary_max
@@ -93,9 +102,10 @@ class Vacancy():
         else:
             raise TypeError
 
-
     def __str__(self):
-        return (f"Вакансия: {self.name} в компании {self.employer}\n"
-                f"Зарплата {self.salary_from} - {self.salary_to} {self.salary_currency}\n"
-                f"Требования: {self.requirement}\n"
-                f"Ссылка на вакансию: {self.url}\n")
+        return (
+            f"Вакансия: {self.name} в компании {self.employer}\n"
+            f"Зарплата {self.salary_from} - {self.salary_to} {self.salary_currency}\n"
+            f"Требования: {self.requirement}\n"
+            f"Ссылка на вакансию: {self.url}\n"
+        )

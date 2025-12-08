@@ -21,7 +21,7 @@ def test_get_vacancies(vacancy_data_json):
 
         mock_get.retuen_value.raise_for_status.return_value = None
         api = HeadHunterAPI()
-        api._HeadHunterAPI__params['page'] = 19
+        api._HeadHunterAPI__params["page"] = 19
         vacancies = api.get_vacancies("python")
 
     assert len(vacancies) == 1

@@ -1,32 +1,34 @@
-
 import pytest
+
 from src.vacancy import Vacancy
 
 
 def test_salary_dict():
-    vac = Vacancy("123456", "Dev", "Company Name", "url",
-                  {"from": 10000, "to": 20000, "currency": "RUR"}, "requirement")
+    vac = Vacancy(
+        "123456", "Dev", "Company Name", "url", {"from": 10000, "to": 20000, "currency": "RUR"}, "requirement"
+    )
     assert vac.salary_from == 10000
     assert vac.salary_to == 20000
     assert vac.salary_currency == "RUR"
     assert vac.salary_max == 20000
 
 
-@pytest.mark.parametrize("currency_input, expected", [
-    ("RUB", "RUR"),
-    ("РУБ", "RUR"),
-    ("РУБ.", "RUR"),
-    ("руб.", "RUR"),
-])
+@pytest.mark.parametrize(
+    "currency_input, expected",
+    [
+        ("RUB", "RUR"),
+        ("РУБ", "RUR"),
+        ("РУБ.", "RUR"),
+        ("руб.", "RUR"),
+    ],
+)
 def test_salary_currency_normalization(currency_input, expected):
-    vac = Vacancy("123456", "Dev", "Comp", "url",
-                  {"from": 100, "to": 200, "currency": currency_input}, "")
+    vac = Vacancy("123456", "Dev", "Comp", "url", {"from": 100, "to": 200, "currency": currency_input}, "")
     assert vac.salary_currency == expected
 
 
 def test_salary_str_full():
-    vac = Vacancy("1", "QA", "Test", "url", "100000 - 150000 RUR",
-                  "requirement")
+    vac = Vacancy("1", "QA", "Test", "url", "100000 - 150000 RUR", "requirement")
     assert vac.salary_from == 100000
     assert vac.salary_to == 150000
     assert vac.salary_currency == "RUR"
@@ -50,18 +52,14 @@ def test_salary_none():
 
 
 def test_comparison_lt():
-    v1 = Vacancy("1", "Dev", "C1", "url", {"from": 10, "to": 20, "currency": "RUR"},
-                 "")
-    v2 = Vacancy("2", "Dev", "C2", "url", {"from": 10, "to": 30, "currency": "RUR"},
-                 "")
+    v1 = Vacancy("1", "Dev", "C1", "url", {"from": 10, "to": 20, "currency": "RUR"}, "")
+    v2 = Vacancy("2", "Dev", "C2", "url", {"from": 10, "to": 30, "currency": "RUR"}, "")
     assert v1 < v2
 
 
 def test_comparison_ge():
-    v1 = Vacancy("1", "Dev", "C1", "url", {"from": 10, "to": 40, "currency": "RUR"},
-                 "")
-    v2 = Vacancy("2", "Dev", "C2", "url", {"from": 10, "to": 30, "currency": "RUR"},
-                 "")
+    v1 = Vacancy("1", "Dev", "C1", "url", {"from": 10, "to": 40, "currency": "RUR"}, "")
+    v2 = Vacancy("2", "Dev", "C2", "url", {"from": 10, "to": 30, "currency": "RUR"}, "")
     assert v1 >= v2
 
 
@@ -79,8 +77,7 @@ def test_comparison_invalid_type():
 
 
 def test_str_method():
-    vac = Vacancy("1", "Dev", "Test", "http://example.com",
-                  {"from": 100, "to": 200, "currency": "RUR"}, "Уметь")
+    vac = Vacancy("1", "Dev", "Test", "http://example.com", {"from": 100, "to": 200, "currency": "RUR"}, "Уметь")
     text = str(vac)
     assert "Вакансия: Dev" in text
     assert "100 - 200 RUR" in text
