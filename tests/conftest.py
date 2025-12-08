@@ -62,3 +62,14 @@ def vacancy_obj():
             "requirement":"Тестовые требования Vac"}
     return Vacancy("123456", "Тестировщик Vac", "Company Vac", "http://example.com",
                    {"from":350000,"to":450000,"currency":"RUR"}, "Тестовые требования Vac")
+
+@pytest.fixture
+def vacancies_list():
+    return [
+        Vacancy("1", "Разработчик", "Company_1", "url",
+                {"from": 100000, "to": 150000, "currency": "RUR"}, "Python, SQL"),
+        Vacancy("2", "Тестировщик", "Company_2", "url",
+                {"from": 80000, "to": 120000, "currency": "RUR"}, "Java"),
+        Vacancy("3", "Аналитик", "Company_3", "url",
+                {"from": 170000, "to": 200000, "currency": "RUR"}, "Python"),
+    ]

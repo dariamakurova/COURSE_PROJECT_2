@@ -22,7 +22,7 @@ def filter_vacancies(vacancies, keywords: list[str]):
 
 def get_vacancies_by_salary(vacancies, salary_range: str):
     """ Получение выкансий в заданном диапозоне зарплат """
-    if  not salary_range or "-" not in salary_range:
+    if  not salary_range:
         return vacancies
     try:
         salary_from, salary_to = salary_range.split("-")
