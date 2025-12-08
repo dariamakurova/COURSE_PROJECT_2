@@ -16,7 +16,7 @@
 ## Установка
 
 Клонируйте репозиторий:
-git clone 
+git clone https://github.com/dariamakurova/COURSE_PROJECT_2
 
 ## Запуск программы
 
